@@ -1,5 +1,5 @@
 # Integrantes - Grupo 1
-# 
+# Jaime Carrasco Quintrequeo
 # 
 # 
 # Ángel Vilches Urrutia
@@ -299,7 +299,7 @@ qq_muestra2_tarapaca <- ggqqplot(reg_tarapaca,
                                  title = "Gráfico Q-Q Región de Tarapacá")
 print(qq_muestra2_tarapaca)
 
-# Como se logra visualizar según los gráfico confeccionados, los grupos no 
+# Como se logra visualizar según los gráficos confeccionados, los grupos no 
 # siguen una distribución normal, pues presentan demasiados valores atípicos.
 # Por lo tanto, se procede a aplicar un método robusto que permita comparaciones
 # de una vía para múltiples grupos independientes. Bajo este contexto, se 
