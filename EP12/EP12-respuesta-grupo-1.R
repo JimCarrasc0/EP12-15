@@ -183,6 +183,7 @@ alfa <- 0.05
 muestra <- datos2 %>% filter(ecivil == "Soltero(a)" &
                              region == "Region Metropolitana de Santiago")
 muestra <- muestra %>% select(sexo, ecivil, edad)
+set.seed(350)
 muestra_hombres <- muestra %>% filter(sexo == "Hombre")
 muestra_mujeres <- muestra %>% filter(sexo == "Mujer")
 
@@ -211,7 +212,7 @@ prueba_yuen <- yuend(x = sapply(n_igual_muestra_hombres[["edad"]], mean),
 print(prueba_yuen)
 
 # En este sentido, tras múltiples pruebas se observa que el p-valor obtenido
-# es siempre menor al nivel de significación establecido (0.00XXXXX < 0.05).
+# es siempre menor al nivel de significación establecido (0.00016 < 0.05).
 # Por lo tanto, se rechaza la hipótesis nula en favor de la hipótesis 
 # alternativa. Así, se concluye, con un 95% de confianza, que la media de la
 # edad de hombres y mujeres soltero/as pertenecientes a la Región Metropolitana
@@ -255,6 +256,7 @@ muestra2 <- muestra2 %>% filter(region == "Region de Tarapaca" |
                                                 region == "Region de La Araucania" |
                                                 region == "Region Metropolitana de Santiago")
 muestra2 <- droplevels(muestra2)
+set.seed(450)
 muestra2 <- sample_n(muestra2, 809)
 
 # Se obtiene los datos referentes a la región de Tarapacá de acuerdo a la
@@ -313,7 +315,7 @@ prueba_t1way <- t1waybt(edad ~ region,
                         nboot = B)
 print(prueba_t1way)
 
-# Finalmente, se obtiene un p-valor igual a 0.03792, menor que el nivel de 
+# Finalmente, se obtiene un p-valor igual a 0.00082, menor que el nivel de 
 # significación establecido (0.05) se rechaza la hipótesis nula en favor de la
 # hipótesis alternativa. Por lo tanto, se concluye, con un 95% de confianza, que
 # la media de las edades es diferente para al menos un grupo en las regiones de
@@ -330,5 +332,15 @@ post_hoc <- mcppb20(edad ~ region,
                     nboot = B)
 print(post_hoc)
 
-# En este sentido, se observan diferencias en la Región Metropolitana de 
-# Santiago respecto de las regiones de Valparaíso y La Araucanía.
+# En este sentido, según la muestra obtenida se observan diferencias en la 
+# Región de La Araucanía respecto de las regiones de Valparaíso, Tarapacá y 
+# Metropolitana de Santiago.
+################################################################################
+#                                                             p-value          #
+# Region Metropolitana de Santiago vs. Region de La Araucania 0.00055          #
+# Region Metropolitana de Santiago vs. Region de Tarapaca     0.31382          #
+# Region Metropolitana de Santiago vs. Region de Valparaiso   0.69827          #
+# Region de La Araucania vs. Region de Tarapaca               0.00000          #
+# Region de La Araucania vs. Region de Valparaiso             0.00000          #
+# Region de Tarapaca vs. Region de Valparaiso                 0.54411          #
+################################################################################
