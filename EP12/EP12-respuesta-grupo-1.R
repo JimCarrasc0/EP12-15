@@ -1,7 +1,7 @@
 # Integrantes - Grupo 1
 # Jaime Carrasco Quintrequeo
-# 
-# 
+# Andrés Haussmann Garín
+# Benjamín Gonzalo Hurtado
 # Ángel Vilches Urrutia
 
 # Librerías
