@@ -166,9 +166,26 @@ print(variables_predictoras)
 ############################# Pregunta 7 - Grupo 1 #############################
 ################################################################################
 
+# Usando herramientas para la exploración de modelos del entorno R, escoger 
+# entre dos y cinco predictores de entre las variables presentes en el conjunto
+# obtenido en el paso anterior para construir un modelo de regresión lineal
+# múltiple.
+
+# Se confecciona un dataframe con las variables predictoras seleccionadas
+datos_modelo <- muestra[, c("calidad", variables_predictoras)]
+
+# Crear el modelo de regresión lineal múltiple utilizando stepwise
+modelo_multiple <- lm(calidad ~ ., data = datos_modelo)
+modelo_final <- step(modelo_multiple)
+
+# Mostrar un resumen del modelo final
+summary(modelo_final)
+
 ################################################################################
 ############################# Pregunta 8 - Grupo 1 #############################
 ################################################################################
+
+
 
 ################################################################################
 ############################# Pregunta 9 - Grupo 1 #############################
