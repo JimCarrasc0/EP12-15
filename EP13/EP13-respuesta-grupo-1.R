@@ -138,7 +138,7 @@ cat("######################### Pregunta 5 - Grupo 1 ########################\n")
 # predictor seleccionado en el paso anterior.
 
 # Previo a la realización del modelo, se calcula la correlación entre la 
-# variable calidad y el predictor seleccionado, es decir, pH
+# variable calidad y el predictor seleccionado, es decir, 
 
 R <- cor(muestra[["alcohol"]], muestra[["calidad"]])
 cat("Correlación: ", R)
@@ -152,32 +152,7 @@ modelo_RLS <- lm(calidad ~ alcohol,
 print(summary(modelo_RLS))
 
 # Se grafica el modelo
-grafico_modelo_RLS <- ggscatter(datos,
-                                x = "alcohol",
-                                y = "calidad",
-                                color = "purple",
-                                fill = "purple",
-                                xlab = "Alcohol",
-                                ylab = "Calidad",
-                                xticks.by = 1)
-grafico_modelo_RLS <- grafico_modelo_RLS + geom_smooth(method = lm,
-                                                       se = FALSE,
-                                                       colour = "red")
-print(grafico_modelo_RLS)
-
-# Según lo graficado, se observa una que la línea roja indica la tendencia
-# estimada de la relación entre la variable "alcohol" en el eje x y la variable
-# "calidad" en el eje y. Dado que la línea roja se extiende desde el punto 5
-# hasta el punto 7 en el eje y, se sugiere que a medida que aumenta el contenido
-# de alcohol, se espera un aumento en la calidad del vino.
-# La concentración de observaciones en los valores centrales del eje y (5, 6 y
-# 7) indica que hay una mayor cantidad de vinos con calidades en ese rango
-# específico en la muestra. Es decir, se indica que los vinos de calidad
-# promedio (representados por los valores centrales) son más comunes en la
-# muestra que los vinos de baja o alta calidad.
-# La dispersión de puntos alrededor de la línea de regresión indica que, si bien
-# existe una tendencia general de aumento en la calidad del vino con el
-# contenido de alcohol, todavía hay cierta variabilidad en los datos. 
+plot(modelo_RLS)
 
 ################################################################################
 ############################# Pregunta 6 - Grupo 1 #############################
@@ -206,23 +181,17 @@ cat("######################### Pregunta 7 - Grupo 1 ########################\n")
 modelo_RLM <- lm(calidad ~ .,
                  data = muestra[, c("calidad", variables_predictoras)])
 print(summary(modelo_RLM))
-grafico_modelo_RLM <- ggplot(data = muestra,
-                             aes(x = calidad,
-                                 y = predict(modelo_RLM))) +
-                      geom_point(color = "purple",
-                                 fill = "purple") +
-                      geom_smooth(method = "lm",
-                                  se = FALSE,
-                                  color = "red") +
-                      xlab("Calidad") +
-                      ylab("Predicción") +
-                      ggtitle("Modelo de Regresión Lineal Múltiple")
-print(grafico_modelo_RLM)
+
+plot(modelo_RLM)
 
 ################################################################################
 ############################# Pregunta 8 - Grupo 1 #############################
 ################################################################################
 cat("######################### Pregunta 8 - Grupo 1 ########################\n")
+
+# Evaluar los modelos y “arreglarlos” en caso de que tengan algún problema con
+# las condiciones que deben cumplir.
+
 
 
 
@@ -231,7 +200,8 @@ cat("######################### Pregunta 8 - Grupo 1 ########################\n")
 ################################################################################
 cat("######################### Pregunta 9 - Grupo 1 ########################\n")
 
-
+# Evaluar el poder predictivo del modelo en datos no utilizados para construirlo
+# (o utilizando validación cruzada).
 
 
 
