@@ -201,11 +201,11 @@ cat("######################### Pregunta 8 - Grupo 1 ########################\n")
 
 # ############### Modelo de regresión lineal simple. ##########################
 
-# 1. Los datos deben representar una relación líneal.
+# 1. Los datos deben representar una relación lineal.
 #   Si se analiza el primer gráfico "Residuals vs Fitted", podemos notar
 #   que ciertos grupos de los datos de la muestra presentan un patrón
 #   de rectas descendentes a lo largo de la recta 0. Por consecuencia,
-#   se puede concluir que los datos no representan una relación líneal.
+#   se puede concluir que los datos no representan una relación lineal.
 
 # 2. La distribución de los residuos debe ser cercana a la normal.
 #   Analizando el segundo gráfico "Normal Q-Q" podemos suponer que los
@@ -216,14 +216,14 @@ cat("######################### Pregunta 8 - Grupo 1 ########################\n")
 # 3. La variabilidad de los puntos en torno a la línea de mínimos cuadrados 
 # debe ser aproximadamente constante.
 #   Observando los gráficos "Residuals vs Fitted" y "Scale-Location" 
-#   se puede dislumbrar la misma situación que el punto 1, es decir, 
+#   se puede vislumbrar la misma situación que el punto 1, es decir, 
 #   hay conjuntos de puntos que parecen seguir un patrón. Por lo anterior,
 #   se deducir que la variabilidad de los residuos no es constante.
 
 # 4. Las observaciones deben ser independientes entre sí. Esto significa 
 # que no se puede usar regresión lineal con series de tiempo.
 #   Considerando que las botellas seleccionadas son distintas entre sí y 
-#   que el encargado del estudio se empeño en no obtener una población
+#   que el encargado del estudio se empeñó en no obtener una población
 #   que tenga observaciones correlacionadas. Se supone que se cumple esta
 #   condición.
 
@@ -232,7 +232,7 @@ cat("######################### Pregunta 8 - Grupo 1 ########################\n")
 
 # 1. Distribución de residuos con distribución cercana a la normal.
 #   Dado a que en el gráfico "Normal Q-Q" se ven datos atípicos, se puede
-#   deducir que la distibución de los residuos no sigue una distribución
+#   deducir que la distribución de los residuos no sigue una distribución
 #   normal.
 
 # 2. La variabilidad de los residuos debe ser aproximadamente constante.
@@ -242,7 +242,7 @@ cat("######################### Pregunta 8 - Grupo 1 ########################\n")
 
 # 3. Los residuos son independientes entre sí.
 #   Para comprobar esta condición se optó por realizar un gráfico de 
-#   residuos en base a su orden de observación y cerificar que existe algún
+#   residuos en base a su orden de observación y verificar que existe algún
 #   patrón en el cual se presenten los residuos.
 
 residuos <- resid(modelo_RLM)
@@ -255,7 +255,7 @@ plot(residuos ~ seq_along(residuos), ylab = "Residuos",
 
 # 4. Cada variable se relaciona linealmente con la respuesta.
 #   Observando el gráfico "Residual vs Fitted", se puede disernir que hay grupos
-#   de valores de residuos que siguen un patron de rectas, por ende, se puede
+#   de valores de residuos que siguen un patrón de rectas, por ende, se puede
 #   concluir que las variables no se relacionan linealmente con la respuesta.
 
 
@@ -263,12 +263,54 @@ plot(residuos ~ seq_along(residuos), ylab = "Residuos",
 # Ante lo mencionado con anterioridad se concluye que los métodos de regresión
 # lineal utilizados no son pertinentes, por tal razón se deben de realizar 
 # modificaciones que permitan generar nuevos modelos predictores.
-# Se tienen muchas alternativas para este proposito, pueden llegar desde hacer
+# Se tienen muchas alternativas para este propósito, pueden llegar desde hacer
 # cambios menores, transformaciones de datos, hasta cambiar de modelo.
-# Por proposito de simplificar este script se opta por solo mostrar la
+# Por propósito de simplificar este script se opta por solo mostrar la
 # alternativa utilizada.
 
 
+# ##################################### RLS.
+# Después de muchas pruebas y cambios realizados se concluye lo siguiente:
+#   1- Realizar transformaciones a la variable predictora de interés no genera
+#     un cambio significativo en el modelo. Incluso, puede llegar a empeorarlo.
+
+modelo_RLS <- lm(calidad ~ log(alcohol),
+                 data = muestra)
+print(summary(modelo_RLS))
+
+# Se grafica el modelo
+plot(modelo_RLS)
+
+modelo_RLS <- lm(calidad ~ sqrt(alcohol),
+                 data = muestra)
+print(summary(modelo_RLS))
+
+# Se grafica el modelo
+plot(modelo_RLS)
+
+modelo_RLS <- lm(calidad ~ 1/alcohol,
+                 data = muestra)
+print(summary(modelo_RLS))
+
+# Se grafica el modelo
+plot(modelo_RLS)
+
+# 2- Cambiar de variable predictora no es una opción debido a que independiente
+# el alcohol es quien mejor correlación tiene, e incluso algunos cambios de
+# predictor generan modelos que no cumplen ninguna condición.
+# Un ejemplo de esto es con el PH.
+R <- cor(muestra[["ph"]], muestra[["calidad"]])
+cat("Correlación: ", R)
+
+modelo_RLS <- lm(calidad ~ ph,
+                 data = muestra)
+print(summary(modelo_RLS))
+
+# Se grafica el modelo
+plot(modelo_RLS)
+
+# 3- Realizando un análisis gráfico de varias variables predictoras
+# con la calidad se llegó a la siguiente conclusión.
 ggplot(muestra, aes(x = alcohol, y = calidad)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -276,6 +318,133 @@ ggplot(muestra, aes(x = alcohol, y = calidad)) +
        x = "Alcohol",
        y = "Calidad")
 
+ggplot(muestra, aes(x = acidez.fija, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Acidez fija",
+       y = "Calidad")
+
+ggplot(muestra, aes(x = acidez.volatil, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Acidez volatil",
+       y = "Calidad")
+
+ggplot(muestra, aes(x = acido.citrico, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Acido citrico",
+       y = "Calidad")
+
+ggplot(muestra, aes(x = azucar.residual, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Azucar residual",
+       y = "Calidad")
+
+ggplot(muestra, aes(x = cloruros, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Cloruros",
+       y = "Calidad")
+
+ggplot(muestra, aes(x = dioxido.azufre.libre, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Dioxido de azufre libre",
+       y = "Calidad")
+
+ggplot(muestra, aes(x = dioxido.azufre.total, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Dioxido de azufre total",
+       y = "Calidad")
+
+ggplot(muestra, aes(x = densidad, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Densidad",
+       y = "Calidad")
+
+ggplot(muestra, aes(x = ph, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "PH",
+       y = "Calidad")
+
+ggplot(muestra, aes(x = sulfatos, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Sulfatos",
+       y = "Calidad")
+
+# Independiente de los cambios posibles a realizar, es imposible arreglar el
+# modelo lineal para que se ajuste a una recta debido a la naturaleza de la
+# variable calidad. Es decir, la naturaleza discreta de la variable calidad
+# hace que existan comportamiento de bandas entre esta y el resto de las variables,
+# logrando así que un modelo simple no pueda adaptarse a un modelo escalonado.
+
+# La forma de poder mejorar esta situación es realizando un modelo no lineal,
+# algo que se aleja de los alcances de esta actividad.
+
+
+# ####################################### RLM
+# Haciendo una transformación a las variables sucede lo mismo del caso
+# anterior.
+muestraA <- muestra
+muestraA <- muestraA %>% mutate(alcohol = log(alcohol))
+muestraA <- muestraA %>% mutate(cloruros = log(cloruros))
+muestraA <- muestraA %>% mutate(acido.citrico = log(acido.citrico))
+muestraA <- muestraA[is.finite(muestraA$acido.citrico), ]
+muestraA <- muestraA %>% mutate(sulfatos = log(sulfatos))
+muestraA <- muestraA %>% mutate(acidez.volatil = log(acidez.volatil))
+muestraA <- muestraA %>% mutate(dioxido.azufre.total = log(dioxido.azufre.total))
+muestraA <- muestraA %>% mutate(dioxido.azufre.libre = log(dioxido.azufre.libre))
+modelo_RLM_A <- lm(calidad ~ .,
+                 data = muestraA[, c("calidad", variables_predictoras)])
+print(summary(modelo_RLM_A))
+
+plot(modelo_RLM_A)
+
+muestraA <- muestra
+muestraA <- muestraA %>% mutate(alcohol = sqrt(alcohol))
+muestraA <- muestraA %>% mutate(cloruros = sqrt(cloruros))
+muestraA <- muestraA %>% mutate(acido.citrico = sqrt(acido.citrico))
+muestraA <- muestraA[is.finite(muestraA$acido.citrico), ]
+muestraA <- muestraA %>% mutate(sulfatos = sqrt(sulfatos))
+muestraA <- muestraA %>% mutate(acidez.volatil = sqrt(acidez.volatil))
+muestraA <- muestraA %>% mutate(dioxido.azufre.total = sqrt(dioxido.azufre.total))
+muestraA <- muestraA %>% mutate(dioxido.azufre.libre = sqrt(dioxido.azufre.libre))
+modelo_RLM_A <- lm(calidad ~ .,
+                   data = muestraA[, c("calidad", variables_predictoras)])
+print(summary(modelo_RLM_A))
+
+plot(modelo_RLM_A)
+
+
+# Añadir más variables no mejoró el modelo, incluso agregando todas este
+# termina empeorando. La razón de esto se debe a que en si ya en el conjunto
+# usado anteriormente se tienen las variables con mayor correlación.
+variables_predictoras_A <- names(muestra)[3:13]
+modelo_RLM_A <- lm(calidad ~ .,
+                   data = muestra[, c("calidad", variables_predictoras)])
+print(summary(modelo_RLM_A))
+
+plot(modelo_RLM_A)
+
+# Al final se extiende la situación vista en RLS. Que debido a la naturaleza
+# de calidad, no se puede traducir de forma certera una relación escalonada
+# a una línea recta.
 
 ################################################################################
 ############################# Pregunta 9 - Grupo 1 #############################
