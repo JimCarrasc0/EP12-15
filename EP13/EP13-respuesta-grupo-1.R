@@ -268,53 +268,14 @@ plot(residuos ~ seq_along(residuos), ylab = "Residuos",
 # Por proposito de simplificar este script se opta por solo mostrar la
 # alternativa utilizada.
 
-# Regresión lineal simple: Transformación de datos de calidad.
 
-# Dado a que el uso del alcohol como variable predictora no permitió
-# tener una regresión lineal simple correcta, pero es la que mejores resultados
-# entrega*, ya que esta cumple parte de las condiciones.
+ggplot(muestra, aes(x = alcohol, y = calidad)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Regresión Lineal",
+       x = "Alcohol",
+       y = "Calidad")
 
-# Se opto por traducir la variable calidad en terminos de alcohol.
-# Esta modificación realmente es generar a fuerza la relación lineal entre
-# la calidad y el alcohol utilizando los datos del modelo de regresión
-# lineal simple.
-muestraA <- muestra
-muestraA <- muestraA %>% mutate(calidad = (2.39907 +  0.32472 * alcohol))
-modelo_RLS_A <- lm(calidad ~ alcohol,
-                  data = muestraA)
-print(summary(modelo_RLS_A))
-
-# Se grafica el modelo
-plot(modelo_RLS_A)
-
-# Este modelo se ajusta mucho mejor a las condiciones, sin embargo, existen
-# datos atípicos los cuales a primera vista solo hay 1 que genera un fuerte
-# apalancamiento en la recta de regresión (señalado como 1), a causa de esto, 
-# ese valor debe de ser descartado para un mejor modelo.
-# *Nota: Se realizaron pruebas con más variables predictoras.
-
-# Regresión lineal múltiple: Transformación de datos de calidad.
-
-# Al igual que sucede con el uso de alcohol, se opto por realizar el mismo
-# procedimiento a la variable a predecir pero con lasa variables consideradas.
-
-muestraB <- muestra
-muestraB <- muestraB %>% mutate(calidad = (2.760738 +  (0.32472 * cloruros) +
-                                             (acido.citrico * -0.300737) +
-                                             (sulfatos * 0.573049) +
-                                             (acidez.volatil * -1.917958) +
-                                             (dioxido.azufre.total * -0.003925)+
-                                             (dioxido.azufre.libre * 0.017794) +
-                                             (alcohol * 0.325678)
-                                           ))
-modelo_RLM_A <- lm(calidad ~ .,
-                 data = muestraB[, c("calidad", variables_predictoras)])
-print(summary(modelo_RLM_A))
-
-plot(modelo_RLM_A)
-
-# Ante este cambio el modelo mejora de forma notable, logrando cumplir todas
-# las condiciones.
 
 ################################################################################
 ############################# Pregunta 9 - Grupo 1 #############################
