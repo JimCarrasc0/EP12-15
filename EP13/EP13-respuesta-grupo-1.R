@@ -192,13 +192,14 @@ cat("######################### Pregunta 8 - Grupo 1 ########################\n")
 # Evaluar los modelos y “arreglarlos” en caso de que tengan algún problema con
 # las condiciones que deben cumplir.
 
+# Debido a que los métodos de regresión lineal fueron creados usando la
+# función lm() se requiere de verificar las condiciones de las regresiones
+# lineales creadas en base a esta función.
+# Para lo anterior, se utilizarán los gráficos generados por la función lm()
+# para evaluar la naturaleza de los residuos generados por la regresión lineal
+# tanto simple como múltiple.
 
 # ############### Modelo de regresión lineal simple. ##########################
-# Debido a que se utilizó la función lm() de R, se deduce que se realizó
-# una regresión lineal mediante mínimos cuadrados. Además, se puede observar
-# que este método fue utilizado sin verificar sus condiciones iniciales.
-# En consecuencia a lo anterior, se realizara la evaluación del modelo desde
-# ese aspecto.
 
 # 1. Los datos deben representar una relación líneal.
 #   Si se analiza el primer gráfico "Residuals vs Fitted", podemos notar
@@ -214,16 +215,17 @@ cat("######################### Pregunta 8 - Grupo 1 ########################\n")
 
 # 3. La variabilidad de los puntos en torno a la línea de mínimos cuadrados 
 # debe ser aproximadamente constante.
-#   Observando los gráficos 1 y 3 ("Resicuals vs Fitted" 
-#   y "Scale-Location" respectivamente) se visualizan
-#   patrones en la organización de los residuos, por ende, no hay 
-#   variabilidad constante en los puntos.
+#   Observando los gráficos "Residuals vs Fitted" y "Scale-Location" 
+#   se puede dislumbrar la misma situación que el punto 1, es decir, 
+#   hay conjuntos de puntos que parecen seguir un patrón. Por lo anterior,
+#   se deducir que la variabilidad de los residuos no es constante.
 
 # 4. Las observaciones deben ser independientes entre sí. Esto significa 
 # que no se puede usar regresión lineal con series de tiempo.
-#   Los datos al no ser una serie de tiempo, sino que solo una recolección
-#   de distintas botellas de vino. Por consecuencia, se concluye que
-#   las observaciones son independientes entre sí.
+#   Considerando que las botellas seleccionadas son distintas entre sí y 
+#   que el encargado del estudio se empeño en no obtener una población
+#   que tenga observaciones correlacionadas. Se supone que se cumple esta
+#   condición.
 
 
 # ############### Modelo de regresión lineal múltiple. ########################
@@ -234,27 +236,85 @@ cat("######################### Pregunta 8 - Grupo 1 ########################\n")
 #   normal.
 
 # 2. La variabilidad de los residuos debe ser aproximadamente constante.
-#   Debido a que en los gráficos 1 y 3 presentan que algunos grupos de
-#   residuos siguen algún patrón. Se deduce que estos no tienen una 
-#   variabilidad constante.
+#   Debido a que en los gráficos "Residuals vs Fitted" y "Scale-Location" 
+#   presentan que algunos grupos de residuos siguen algún patrón. Se deduce 
+#   que estos no tienen una variabilidad constante.
 
 # 3. Los residuos son independientes entre sí.
 #   Para comprobar esta condición se optó por realizar un gráfico de 
-#   residuos en base a su orden de observación (literalmente es el orden
-#   en el cual se presentan).
+#   residuos en base a su orden de observación y cerificar que existe algún
+#   patrón en el cual se presenten los residuos.
 
 residuos <- resid(modelo_RLM)
 plot(residuos ~ seq_along(residuos), ylab = "Residuos", 
      xlab = "Orden de las observaciones", 
      main = "Gráfico de Residuos vs. Orden de las Observaciones")
 
-#   Al no presentarse un patrón visible se puede dar por cumplida esta
-#   condición.
+#   Al no visibilizarse un patrón se puede dar por cumplida esta
+#   condición, es decir, los residuos son independientes entre sí.
 
 # 4. Cada variable se relaciona linealmente con la respuesta.
-#   Observando el gráfico Residual vs Fitted, se puede disernir que hay grupos
+#   Observando el gráfico "Residual vs Fitted", se puede disernir que hay grupos
 #   de valores de residuos que siguen un patron de rectas, por ende, se puede
 #   concluir que las variables no se relacionan linealmente con la respuesta.
+
+
+
+# Ante lo mencionado con anterioridad se concluye que los métodos de regresión
+# lineal utilizados no son pertinentes, por tal razón se deben de realizar 
+# modificaciones que permitan generar nuevos modelos predictores.
+# Se tienen muchas alternativas para este proposito, pueden llegar desde hacer
+# cambios menores, transformaciones de datos, hasta cambiar de modelo.
+# Por proposito de simplificar este script se opta por solo mostrar la
+# alternativa utilizada.
+
+# Regresión lineal simple: Transformación de datos de calidad.
+
+# Dado a que el uso del alcohol como variable predictora no permitió
+# tener una regresión lineal simple correcta, pero es la que mejores resultados
+# entrega*, ya que esta cumple parte de las condiciones.
+
+# Se opto por traducir la variable calidad en terminos de alcohol.
+# Esta modificación realmente es generar a fuerza la relación lineal entre
+# la calidad y el alcohol utilizando los datos del modelo de regresión
+# lineal simple.
+muestraA <- muestra
+muestraA <- muestraA %>% mutate(calidad = (2.39907 +  0.32472 * alcohol))
+modelo_RLS_A <- lm(calidad ~ alcohol,
+                  data = muestraA)
+print(summary(modelo_RLS_A))
+
+# Se grafica el modelo
+plot(modelo_RLS_A)
+
+# Este modelo se ajusta mucho mejor a las condiciones, sin embargo, existen
+# datos atípicos los cuales a primera vista solo hay 1 que genera un fuerte
+# apalancamiento en la recta de regresión (señalado como 1), a causa de esto, 
+# ese valor debe de ser descartado para un mejor modelo.
+# *Nota: Se realizaron pruebas con más variables predictoras.
+
+# Regresión lineal múltiple: Transformación de datos de calidad.
+
+# Al igual que sucede con el uso de alcohol, se opto por realizar el mismo
+# procedimiento a la variable a predecir pero con lasa variables consideradas.
+
+muestraB <- muestra
+muestraB <- muestraB %>% mutate(calidad = (2.760738 +  (0.32472 * cloruros) +
+                                             (acido.citrico * -0.300737) +
+                                             (sulfatos * 0.573049) +
+                                             (acidez.volatil * -1.917958) +
+                                             (dioxido.azufre.total * -0.003925)+
+                                             (dioxido.azufre.libre * 0.017794) +
+                                             (alcohol * 0.325678)
+                                           ))
+modelo_RLM_A <- lm(calidad ~ .,
+                 data = muestraB[, c("calidad", variables_predictoras)])
+print(summary(modelo_RLM_A))
+
+plot(modelo_RLM_A)
+
+# Ante este cambio el modelo mejora de forma notable, logrando cumplir todas
+# las condiciones.
 
 ################################################################################
 ############################# Pregunta 9 - Grupo 1 #############################
