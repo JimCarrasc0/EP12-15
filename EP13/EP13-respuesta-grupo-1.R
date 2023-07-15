@@ -193,7 +193,68 @@ cat("######################### Pregunta 8 - Grupo 1 ########################\n")
 # las condiciones que deben cumplir.
 
 
+# ############### Modelo de regresión lineal simple. ##########################
+# Debido a que se utilizó la función lm() de R, se deduce que se realizó
+# una regresión lineal mediante mínimos cuadrados. Además, se puede observar
+# que este método fue utilizado sin verificar sus condiciones iniciales.
+# En consecuencia a lo anterior, se realizara la evaluación del modelo desde
+# ese aspecto.
 
+# 1. Los datos deben representar una relación líneal.
+#   Si se analiza el primer gráfico "Residuals vs Fitted", podemos notar
+#   que ciertos grupos de los datos de la muestra presentan un patrón
+#   de rectas descendentes a lo largo de la recta 0. Por consecuencia,
+#   se puede concluir que los datos no representan una relación líneal.
+
+# 2. La distribución de los residuos debe ser cercana a la normal.
+#   Analizando el segundo gráfico "Normal Q-Q" podemos suponer que los
+#   residuos siguen aproximadamente una distribución normal. No obstante,
+#   la existencia de valores atípicos hace que esta conclusión no sea del
+#   todo correcta.
+
+# 3. La variabilidad de los puntos en torno a la línea de mínimos cuadrados 
+# debe ser aproximadamente constante.
+#   Observando los gráficos 1 y 3 ("Resicuals vs Fitted" 
+#   y "Scale-Location" respectivamente) se visualizan
+#   patrones en la organización de los residuos, por ende, no hay 
+#   variabilidad constante en los puntos.
+
+# 4. Las observaciones deben ser independientes entre sí. Esto significa 
+# que no se puede usar regresión lineal con series de tiempo.
+#   Los datos al no ser una serie de tiempo, sino que solo una recolección
+#   de distintas botellas de vino. Por consecuencia, se concluye que
+#   las observaciones son independientes entre sí.
+
+
+# ############### Modelo de regresión lineal múltiple. ########################
+
+# 1. Distribución de residuos con distribución cercana a la normal.
+#   Dado a que en el gráfico "Normal Q-Q" se ven datos atípicos, se puede
+#   deducir que la distibución de los residuos no sigue una distribución
+#   normal.
+
+# 2. La variabilidad de los residuos debe ser aproximadamente constante.
+#   Debido a que en los gráficos 1 y 3 presentan que algunos grupos de
+#   residuos siguen algún patrón. Se deduce que estos no tienen una 
+#   variabilidad constante.
+
+# 3. Los residuos son independientes entre sí.
+#   Para comprobar esta condición se optó por realizar un gráfico de 
+#   residuos en base a su orden de observación (literalmente es el orden
+#   en el cual se presentan).
+
+residuos <- resid(modelo_RLM)
+plot(residuos ~ seq_along(residuos), ylab = "Residuos", 
+     xlab = "Orden de las observaciones", 
+     main = "Gráfico de Residuos vs. Orden de las Observaciones")
+
+#   Al no presentarse un patrón visible se puede dar por cumplida esta
+#   condición.
+
+# 4. Cada variable se relaciona linealmente con la respuesta.
+#   Observando el gráfico Residual vs Fitted, se puede disernir que hay grupos
+#   de valores de residuos que siguen un patron de rectas, por ende, se puede
+#   concluir que las variables no se relacionan linealmente con la respuesta.
 
 ################################################################################
 ############################# Pregunta 9 - Grupo 1 #############################
