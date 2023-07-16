@@ -453,7 +453,37 @@ cat("######################### Pregunta 9 - Grupo 1 ########################\n")
 
 # Evaluar el poder predictivo del modelo en datos no utilizados para construirlo
 # (o utilizando validación cruzada).
+# Crear conjuntos de entrenamiento y prueba
+set.seed(125)  # Establecer semilla
+n <- nrow(datos)
+n_entrenamiento <- floor(0.7 * n)
+muestra <- sample.int (n = n , size = n_entrenamiento, replace = FALSE)  
+# 70% para entrenamiento
+datos_entrenamiento <- datos[muestra, ]
+datos_prueba <- datos[-muestra, ]
 
+# Ajustar el modelo con el conjunto de entrenamiento
+modelo <- lm(calidad ~ ., data = datos_entrenamiento)
+print(summary(modelo))
+
+# Calcular error cuadrado promedio para el conjunto de entrenamiento
+mse_entrenamiento <- mean(modelo$residuals ** 2)
+cat("Error cuadrático medio para el conjunto de entrenamiento:", mse_entrenamiento, "\n")
+
+# Realizar predicciones para el conjunto de prueba
+predicciones <- predict(modelo, datos_prueba)
+
+# Calcular el error cuadrado promedio para el conjunto de prueba
+mse_prueba <- mean((datos_prueba$calidad - predicciones)^2)
+cat("Error cuadrático medio para el conjunto de prueba:", mse_prueba, "\n")
+
+
+
+# Utilizando una semilla aleatoria de 125, se puede observar que al ser los errores
+# cuadráticos medios para los conjuntos de entrenamiento y prueba iguales 
+#a 0.5419986 y 0.5249593
+# respectivamente, este modelo sí podría ser generalizable, ya que ambos valores
+#son muy parecidos.
 
 
 
