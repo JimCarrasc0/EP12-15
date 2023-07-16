@@ -178,8 +178,11 @@ cat("######################### Pregunta 7 - Grupo 1 ########################\n")
 # obtenido en el paso anterior para construir un modelo de regresión lineal
 # múltiple.
 
+variables_predictoras_seleccionadas <- sample(variables_predictoras, 4)
+
 modelo_RLM <- lm(calidad ~ .,
-                 data = muestra[, c("calidad", variables_predictoras)])
+                 data = muestra[, c("calidad",
+                                    variables_predictoras_seleccionadas)])
 print(summary(modelo_RLM))
 
 plot(modelo_RLM)
