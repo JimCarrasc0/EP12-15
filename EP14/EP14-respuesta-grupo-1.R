@@ -451,9 +451,43 @@ cat("######################### Pregunta 9 - Grupo 1 ########################\n")
 # modelos con los datos de los 40 vinos que no se incluyeron en su construcción
 # en términos de sensibilidad y especificidad.
 
+# Primero: Obtener las predicciones de los modelos con los datos de evaluación
+predicciones_evaluacion_simple <- predict(modelo_rlogistico, 
+                                          newdata = conjunto_evaluacion, 
+                                          type = "response")
 
+predicciones_evaluacion_multiple <- predict(modelo_rlogm, 
+                                            newdata = conjunto_evaluacion, 
+                                            type = "response")
 
+# Segundo: Comparar las predicciones con las clases reales y calcular sensibilidad y especificidad
 
+# Para el modelo de regresión logística simple
+predicciones_clasificacion_evaluacion_simple <- ifelse(predicciones_evaluacion_simple >= 0.5, 1, 0)
+matriz_confusion_evaluacion_simple <- table(conjunto_evaluacion$clase_num, 
+                                            predicciones_clasificacion_evaluacion_simple)
+
+# Calcular sensibilidad y especificidad
+sensibilidad_evaluacion_simple <- matriz_confusion_evaluacion_simple[2, 2] / (matriz_confusion_evaluacion_simple[2, 1] + matriz_confusion_evaluacion_simple[2, 2])
+especificidad_evaluacion_simple <- matriz_confusion_evaluacion_simple[1, 1] / (matriz_confusion_evaluacion_simple[1, 1] + matriz_confusion_evaluacion_simple[1, 2])
+
+# Para el modelo de regresión logística múltiple
+predicciones_clasificacion_evaluacion_multiple <- ifelse(predicciones_evaluacion_multiple >= 0.5, 1, 0)
+matriz_confusion_evaluacion_multiple <- table(conjunto_evaluacion$clase_num, 
+                                              predicciones_clasificacion_evaluacion_multiple)
+
+# Calcular sensibilidad y especificidad
+sensibilidad_evaluacion_multiple <- matriz_confusion_evaluacion_multiple[2, 2] / (matriz_confusion_evaluacion_multiple[2, 1] + matriz_confusion_evaluacion_multiple[2, 2])
+especificidad_evaluacion_multiple <- matriz_confusion_evaluacion_multiple[1, 1] / (matriz_confusion_evaluacion_multiple[1, 1] + matriz_confusion_evaluacion_multiple[1, 2])
+
+# Imprimir los resultados
+cat("Resultados para el modelo de regresión logística simple:\n")
+cat("Sensibilidad:", sensibilidad_evaluacion_simple, "\n")
+cat("Especificidad:", especificidad_evaluacion_simple, "\n")
+
+cat("Resultados para el modelo de regresión logística múltiple:\n")
+cat("Sensibilidad:", sensibilidad_evaluacion_multiple, "\n")
+cat("Especificidad:", especificidad_evaluacion_multiple, "\n")
 
 
 
