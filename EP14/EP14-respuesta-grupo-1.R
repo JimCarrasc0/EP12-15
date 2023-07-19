@@ -113,5 +113,70 @@ print(variable_seleccionada)
 ################################################################################
 cat("######################### Pregunta 5 - Grupo 1 ########################\n")
 
+# Usando el entorno R y paquetes estándares, construir un modelo de regresión
+# logística con el predictor seleccionado en el paso anterior y utilizando de la
+# muestra obtenida.
+
+# Crear el modelo de regresión logística
+modelo_rlogistico <- glm(clase_num ~ densidad,
+                         data = conjunto_entrenamiento,
+                         family = binomial(link = "logit"))
+print(summary(modelo_rlogistico))
+
+plot(modelo_rlogistico)
+
+################################################################################
+############################# Pregunta 6 - Grupo 1 #############################
+################################################################################
+cat("######################### Pregunta 6 - Grupo 1 ########################\n")
+
+# Agregue la variable seleccionada en el paso 4 al conjunto obtenido en el punto
+# 3.
+
+variables_predictoras <- c(variables_predictoras, variable_seleccionada)
+cat("Conjunto de variables predictoras final: \n")
+print(variables_predictoras)
+
+################################################################################
+############################# Pregunta 7 - Grupo 1 #############################
+################################################################################
+cat("######################### Pregunta 7 - Grupo 1 ########################\n")
+
+# Usando herramientas estándares para la exploración de modelos del entorno R,
+# buscar entre dos y cinco predictores de entre las variables presentes en el
+# conjunto obtenido en el paso anterior para construir un modelo de regresión
+# logística múltiple.
+
+################################################################################
+############################# Pregunta 8 - Grupo 1 #############################
+################################################################################
+cat("######################### Pregunta 8 - Grupo 1 ########################\n")
+
+# Evaluar la confiabilidad de los modelos (i.e. que tengan un buen nivel de
+# ajuste y son generalizables) y “arreglarlos” en caso de que tengan algún
+# problema.
+
+
+################################################################################
+############################# Pregunta 9 - Grupo 1 #############################
+################################################################################
+cat("######################### Pregunta 9 - Grupo 1 ########################\n")
+
+# Usando herramientas del paquete caret, evaluar el poder predictivo de los
+# modelos con los datos de los 40 vinos que no se incluyeron en su construcción
+# en términos de sensibilidad y especificidad.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
