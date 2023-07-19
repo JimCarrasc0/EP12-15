@@ -147,6 +147,12 @@ cat("######################### Pregunta 7 - Grupo 1 ########################\n")
 # conjunto obtenido en el paso anterior para construir un modelo de regresión
 # logística múltiple.
 
+variables_predictoras_seleccionadas <- sample(variables_predictoras, 3)
+modelo_rlogm <- glm(calidad ~ ., data = muestra_final[,c("calidad", variables_predictoras_seleccionadas)])
+print(summary(modelo_rlogm))
+plot(modelo_rlogm)
+
+
 ################################################################################
 ############################# Pregunta 8 - Grupo 1 #############################
 ################################################################################
