@@ -101,3 +101,31 @@ modelo_RLM_boot <- train(calidad ~ .,
 
 # Ver el resumen del rendimiento del modelo con bootstrapping
 print(modelo_RLM_boot)
+
+
+################################################################################
+############################# Pregunta 4 - Grupo 1 #############################
+################################################################################
+cat("######################### Pregunta 4 - Grupo 1 ########################\n")
+
+# Haciendo un poco de investigación sobre el paquete caret, en particular cómo 
+# hacer Recursive Feature Elimination (RFE), construir un modelo de regresión 
+# lineal múltiple para predecir la variable calidad que incluya entre 2 y 6 
+# predictores, seleccionando el conjunto de variables que maximice R2 y que use 
+# cinco repeticiones de validación cruzada de cinco pliegues para evitar el 
+# sobreajuste.
+
+ctrl <- rfeControl(functions = lmFuncs,
+                   method = "repeatedcv",
+                   repeats = 5,
+                   verbose = FALSE)
+
+rlm <- rfe(x=muestra_final[, c("calidad")], y=muestra_final$calidad, sizes = 2:6, rfeControl = ctrl)
+
+print(rlm)
+seleccion <- predict(result, type = "variables", fit = TRUE)
+
+modelo_final <- lm(calidad ~ ., data = datos[, c("calidad", seleccion)])
+summary(modelo_final)
+
+print(modelo_final)
